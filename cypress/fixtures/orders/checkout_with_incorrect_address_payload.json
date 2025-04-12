@@ -1,0 +1,48 @@
+{
+    "user": "6771210565feefc82f4a960d",
+    "item": [
+      {
+        "user": "6771210565feefc82f4a960d",
+        "product": {
+          "_id": "67713e8d65feefc82f4a989e",
+          "title": "North face storm strke",
+          "description": "lorem ",
+          "price": 250,
+          "discountPercentage": 10,
+          "category": "6771265b7d7bc0fe451d7cfc",
+          "brand": {
+            "_id": "677125f27d7bc0fe451d7cf8",
+            "name": "The North Face"
+          },
+          "stockQuantity": 55,
+          "thumbnail": "https://fitanu.com/media/catalog/product/cache/44e5e6a5de13081f430826f494e7fd04/_/1/_196247372564_I_HERO-NF0A7W4GKT01-M-STORM-STRIKE-III-WP-tnf_black-asphalt_grey.webp",
+          "images": [
+            "https://fitanu.com/media/catalog/product/cache/44e5e6a5de13081f430826f494e7fd04/_/1/_196247372564_I_HERO-NF0A7W4GKT01-M-STORM-STRIKE-III-WP-tnf_black-asphalt_grey.webp",
+            "https://fitanu.com/media/catalog/product/cache/44e5e6a5de13081f430826f494e7fd04/_/1/_196247372564_I_HERO-NF0A7W4GKT01-M-STORM-STRIKE-III-WP-tnf_black-asphalt_grey.webp",
+            "https://fitanu.com/media/catalog/product/cache/44e5e6a5de13081f430826f494e7fd04/_/1/_196247372564_I_HERO-NF0A7W4GKT01-M-STORM-STRIKE-III-WP-tnf_black-asphalt_grey.webp",
+            "https://fitanu.com/media/catalog/product/cache/44e5e6a5de13081f430826f494e7fd04/_/1/_196247372564_I_HERO-NF0A7W4GKT01-M-STORM-STRIKE-III-WP-tnf_black-asphalt_grey.webp"
+          ],
+          "isDeleted": false,
+          "createdAt": "2024-12-29T12:20:29.170Z",
+          "updatedAt": "2024-12-29T13:02:54.862Z"
+        },
+        "quantity": 1,
+        "_id": "67fa91290c0a946a01ed93c9"
+      }
+    ],
+    "address": {
+      "user": "6771210565feefc82f4a960d",
+      "street": "    ",
+      "city": "1",
+      "state": "2",
+      "phoneNumber": "1",
+      "postalCode": "1",
+      "country": "        ",
+      "type": "   ",
+      "_id": "67fa97670c0a946a01ed940a",
+      "__v": 0
+    },
+    "paymentMode": "COD",
+    "total": 260.55
+  }
+  

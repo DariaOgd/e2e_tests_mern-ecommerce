@@ -15,7 +15,7 @@ class ProductDetailsCommands {
             .contains(currentNumber.toString())
             .then(() => {
               cy.contains('+').click()
-              cy.wait(500) // Prefer to replace with `.should()` where possible
+              cy.wait(500)
               clickPlusButton(clicksRemaining - 1, currentNumber + 1)
             })
         }

@@ -16,19 +16,16 @@ describe('When verifying product details', () => {
 
     openFirstProductDetails()
 
-    cy.wait(1000) // If you can, avoid arbitrary waits. Prefer `.should()`.
+    cy.wait(1000)
 
-    // Verify product title exists
     cy.get('.MuiStack-root h4')
       .invoke('text')
       .should('not.be.empty')
 
-    // Verify rating is in expected format (e.g. "4 Stars")
     cy.get('.MuiStack-root .MuiRating-root')
       .invoke('attr', 'aria-label')
       .should('match', /^\d+\sStars$/)
 
-    // Verify "In Stock" or "Out of Stock"
     cy.get('.MuiStack-root .MuiRating-root')
       .parent()
       .find('p')
@@ -44,7 +41,8 @@ describe('When verifying product details', () => {
       .should('contain.text', 'Add To Cart')
   })
 
-  it.only('should add product to cart and remove it', () => {
+//to finish
+  it.only('should add product to cart correctly and remove it', () => {
 
     openFirstProductDetails()
     ProductDetailsCommands.setProductQuantity(3, 1)

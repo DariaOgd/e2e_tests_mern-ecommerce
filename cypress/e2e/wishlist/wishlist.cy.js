@@ -12,7 +12,6 @@ describe('When veryfying user wishlist', () => {
       let headerText; 
       it('Should add product to wishlist from product detail page', () => {
         openFirstProductDetails();
-      
         cy.get('.MuiStack-root h4').first()
           .invoke('text')
           .then((text) => {
@@ -21,15 +20,9 @@ describe('When veryfying user wishlist', () => {
             addToWishlist()
             openWishlist();
             verifyProductInWishlist(headerText, 0)
-      
-            //remove from cart
             removeProductFromWishlist()
-      
             cy.get(".MuiStack-root").should('not.have.class', '.MuiGrid-container')
-      
-        }); // <- tu zamykasz `.then()`, ale gdzie zamknięcie `it()`?
-      
-        // BRAKUJE tego nawiasu zamykającego `it()`
+        }); 
       })
 
       it('should add a note to a product in a wishlist', () => {
@@ -56,7 +49,6 @@ describe('When veryfying user wishlist', () => {
         CartCommands.removeProductFromCart()
         openWishlist()
         removeProductFromWishlist()
-
       })
     })
 
@@ -69,8 +61,6 @@ function openWishlist(){
 
 function addToWishlist(){
   cy.get(".PrivateSwitchBase-input").click();
-
-
 }
 
 function removeProductFromWishlist(){

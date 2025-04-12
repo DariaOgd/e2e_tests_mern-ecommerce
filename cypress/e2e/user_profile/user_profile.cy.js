@@ -21,6 +21,9 @@ describe('When veryfing user profile', () => {
             cy.get('.MuiStack-root').should('contain', name)
             cy.get('.MuiStack-root').should('contain', email)
         })
+    })
+
+    it('should verify if user can change data profile', () => {
 
     })
 

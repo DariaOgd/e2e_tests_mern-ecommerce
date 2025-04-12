@@ -111,7 +111,6 @@ describe('When verifying checkout', () => {
       state: "80-000",
       postalCode: "1"
     })
-
     CheckoutCommands.submitAddressForm()
 
     CheckoutCommands.placeOrder()
@@ -119,9 +118,9 @@ describe('When verifying checkout', () => {
 
     //after
     cy.get(".MuiStack-root").contains("Order summary").parent().contains("Remove").click()
-
-
   })
+
+  //wrong address and no adress
 })
 
 function submitOrderExpectingFailure(){
@@ -142,12 +141,6 @@ function verifyOrderItem(index, orderId, total, productName) {
         cy.contains(productName)
     })
 }
-
-
-
-
-
-
 
 function verifyConfirmationText(){
     cy.get('.MuiPaper-root')

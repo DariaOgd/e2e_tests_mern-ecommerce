@@ -19,7 +19,6 @@ describe('Given register page', () => {
         const userPassword =  'Password123!'
         CommonHelper.Register(userName, userEmail, userPassword, true)
         verifyRegisterFormFieldsExist()
-
     })
     
     it('should verify that user cant create an account if it doesnt match password criteria', () => {
@@ -30,8 +29,6 @@ describe('Given register page', () => {
         const userPassword =  'Password'
         CommonHelper.Register(userName, userEmail, userPassword, true)
         cy.get('input[placeholder="Password"]').parent().parent().parent().should('contain', info_text)
-
-
     })
 
 })
@@ -39,7 +36,6 @@ describe('Given register page', () => {
 function generateTwoDigitNumber() {
     return Math.floor(Math.random() * 90) + 10;
 }
-
 
 function verifyRegisterFormFieldsExist(){
     cy.get('input[placeholder="Username"]').should('exist')

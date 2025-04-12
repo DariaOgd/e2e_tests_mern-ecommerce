@@ -35,6 +35,59 @@ class CartCommands {
   
   }
 
+  static extractNumber(priceStr) {
+    return parseFloat(priceStr.replace(',', '.').replace(/[^\d.]/g, ''));
+  }
+
+  static calculateSubtotal(prices) {
+    return prices.reduce((sum, priceStr) => {
+      const num = this.extractNumber(priceStr);
+      return sum + (isNaN(num) ? 0 : num);
+    }, 0);
+  }
+
+  static assertProductPricesInCart(expectedPrices) {
+    cy.get('.MuiStack-root p').then(($p) => {
+      const prices = [...$p].map(p => p.innerText);
+      expectedPrices.forEach((expectedPrice) => {
+        expect(
+          prices.some(price => price.includes(expectedPrice)),
+          `Expected product price "${expectedPrice}" to be in the cart`
+        ).to.be.true;
+      });
+    });
+  }
+  static formatSubtotal(subtotal) {
+    return Number.isInteger(subtotal)
+      ? subtotal.toFixed(0).replace('.', ',') // e.g. 100 → "100"
+      : subtotal.toFixed(2).replace('.', ','); // e.g. 199.99 → "199,99"
+  }
+
+  static assertSubtotalInCart(expectedSubtotal) {
+    const formattedSubtotal = this.formatSubtotal(expectedSubtotal);
+  
+    cy.get('h6').then(($h6) => {
+      const found = [...$h6].some(el => el.innerText.includes(formattedSubtotal));
+      expect(
+        found,
+        `Expected subtotal "${formattedSubtotal}" to be visible in the cart`
+      ).to.be.true;
+    });
+  }
+
+  static assertProductNamesInCart(expectedNames) {
+    cy.get('.MuiStack-root a').then(($links) => {
+      const names = [...$links].map(link => link.innerText);
+      expectedNames.forEach((expectedName) => {
+        expect(
+          names.some(name => name.includes(expectedName)),
+          `Expected product name "${expectedName}" to be in the cart`
+        ).to.be.true;
+      });
+    });
+  }
+
+
     
 
 }

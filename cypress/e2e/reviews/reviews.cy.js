@@ -38,8 +38,6 @@ describe('When veryfing user revierws', () => {
         //delete
         ProductDetailsCommands.deleteComment(comment + "Edit")
         verfyIfREviewDoesNotExit(comment + "Edit")
-
-
     })
 
 })

@@ -86,6 +86,20 @@ static verifyUserNameIsCorrectlyDisplayedInHeader(userName) {
         cy.get('.MuiStack-root').should('contain', `Hey👋, ${userName}`); // Checks if the username is displayed correctly
     });
 }
+
+static operateOnProductByIndex(index = 0, callback) {
+    cy.get('.MuiGrid-container .MuiPaper-root')
+      .eq(index)
+      .within(() => {
+        callback();
+      });
+  }
+
+  static addProductToCartFromMainPage() {
+    cy.contains('Add To Cart').click();
+    cy.contains('Added to cart').should('be.visible');
+  }
+  
     
 
 }
