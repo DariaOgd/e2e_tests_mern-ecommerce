@@ -92,6 +92,53 @@ class ApiHelper {
         });
       });
     }
+
+    static requestFailedLogin(modifiedUser) {
+      return cy.request({
+        method: 'POST',
+        url: `${this.BASE_URL}/auth/login`,
+        body: modifiedUser,
+        failOnStatusCode: false,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    static logout() {
+      return cy.request({
+        method: 'GET',
+        url: `${this.BASE_URL}/auth/logout`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    static checkAuth() {
+      return cy.request({
+        method: 'GET',
+        url: `${this.BASE_URL}/auth/check-auth`,
+        failOnStatusCode: false,
+      });
+    }
+
+    static registerUser(payload) {
+      return cy.request({
+        method: 'POST',
+        url: `${this.BASE_URL}/auth/signup`,
+        body: payload,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        failOnStatusCode: false,
+
+      });
+    }
+    
+    
+    
+    
   }
   
   export default ApiHelper;
