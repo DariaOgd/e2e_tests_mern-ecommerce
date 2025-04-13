@@ -40,7 +40,7 @@ describe('Given login page', () => {
 
     })
 
-    it.only('should verify that user admin user can log in', () => {
+    it('should verify that user admin user can log in', () => {
         const userEmail = 'Admin1@gmail.com'
         const userPassword =  'Password123!'
         CommonHelper.LogIn(userEmail, userPassword)

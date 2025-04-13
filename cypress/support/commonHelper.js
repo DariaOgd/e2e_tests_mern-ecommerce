@@ -99,6 +99,13 @@ static operateOnProductByIndex(index = 0, callback) {
     cy.contains('Add To Cart').click();
     cy.contains('Added to cart').should('be.visible');
   }
+
+  static openProfileDropdownAndSelect(option) {
+    cy.get('header').within(() => {
+      cy.get('.MuiAvatar-root').click();
+    });
+    cy.get('ul[role="menu"]').contains(option).click();
+  }
   
     
 

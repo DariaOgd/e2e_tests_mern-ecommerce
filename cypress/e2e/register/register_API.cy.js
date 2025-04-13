@@ -27,7 +27,7 @@ describe('When veryfing register process', () => {
         cy.fixture('register/register_new_user_payload').then((basePayload) => {
             const invalidPayload = {
               ...basePayload,
-              email: 'invalid-email-format.com', // ❌ no "@"
+              email: 'invalid-email-format.com', 
             };
       
             ApiHelper.registerUser(invalidPayload).then((response) => {
@@ -40,7 +40,7 @@ describe('When veryfing register process', () => {
         cy.fixture('register/register_new_user_payload').then((basePayload) => {
             const invalidPayload = {
               ...basePayload,
-              password: 'wrongpassword', // ❌ no "@"
+              password: 'wrongpassword',
             };
       
             ApiHelper.registerUser(invalidPayload).then((response) => {
@@ -53,10 +53,44 @@ describe('When veryfing register process', () => {
         ApiHelper.registerUser({}).then((response) => {
             expect(response.status).to.eq(500);
             expect(response.body).to.have.property('message');
-            // Można też: expect(response.body.message).to.include('email');
+
           });
 
     })
 
+    it('should not allow registering with an already used email', () => {
+        cy.fixture('register/register_new_user_payload').then((user) => {
+          user.email = 'Pawel@gmail.com';
+      
+          ApiHelper.registerUser(user).then((response) => {
+            expect(response.status).to.be.oneOf([400, 409]);
+            expect(response.body).to.have.property('message');
+            expect(response.body.message).to.include('already');
+          });
+        });
+      });
 
+      it('should not allow short passwords', () => {
+        cy.fixture('register/register_new_user_payload').then((payload) => {
+          payload.password = '123';
+      
+          ApiHelper.registerUser(payload).then((response) => {
+            expect(response.status).to.be.oneOf([400, 422]);
+            expect(response.body).to.have.property('message');
+          });
+        });
+      });
+
+      it('should not allow missing name field', () => {
+        cy.fixture('register/register_new_user_payload').then((payload) => {
+          delete payload.name;
+      
+          ApiHelper.registerUser(payload).then((response) => {
+            expect(response.status).to.be.oneOf([400, 422]);
+            expect(response.body).to.have.property('message');
+          });
+        });
+      });
+      
+      
 })
