@@ -1,0 +1,4 @@
+To do
+- in checkout check subtotal for it
+- checkout with wrong and no address should fails
+- refactor code to make it clearer
