@@ -12,6 +12,7 @@ describe('When verifying checkout', () => {
     CommonHelper.LogIn(userEmail, userPassword)
   })
 
+  //dodac subtotal i sprawdzic przy checkoucie
   it('should complete checkout successfully with card payment', () => {
     openFirstProductDetails()
     CartCommands.addToCart()
