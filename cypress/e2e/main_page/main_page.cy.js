@@ -65,17 +65,17 @@ describe('Given main page', () => {
   context('when veryfing left menu', () => {
     it('should veryfy filtering on brands', () => {
       cy.wait(3000);
-      selectBrandFilter('Nike');
+      selectBrandFilter('Puma');
       cy.get('.MuiGrid-container .MuiPaper-root').then($els => {
         const lastIndex = $els.length - 1;
         const firstIndex = 0;
 
         CommonHelper.operateOnProductByIndex(lastIndex, () => {
-          getProductBrand('Nike');
+          getProductBrand('Puma');
         });
 
         CommonHelper.operateOnProductByIndex(firstIndex, () => {
-          getProductBrand('Nike');
+          getProductBrand('Puma');
         });
       });
     });

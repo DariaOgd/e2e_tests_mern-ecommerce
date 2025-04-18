@@ -20,6 +20,13 @@ describe('Given register page', () => {
         CommonHelper.Register(userName, userEmail, userPassword, true)
         verifyRegisterFormFieldsExist()
     })
+    it.only('should verify if user cant create an account if something is empty', () => {
+        let number = generateTwoDigitNumber()
+        const userEmail = 'Pawel@gmail.com'
+        const userName = `user_name_${number}`
+        const userPassword =  ' '
+        CommonHelper.Register(userName, userEmail, userPassword, true)
+    })
     
     it('should verify that user cant create an account if it doesnt match password criteria', () => {
         const info_text = 'at least 8 characters, must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, Can contain special characters'

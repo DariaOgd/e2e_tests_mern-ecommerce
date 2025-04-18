@@ -42,7 +42,7 @@ describe('When verifying product details', () => {
   })
 
 //to finish
-  it.only('should add product to cart correctly and remove it', () => {
+  it('should add product to cart correctly and remove it', () => {
 
     openFirstProductDetails()
     ProductDetailsCommands.setProductQuantity(3, 1)

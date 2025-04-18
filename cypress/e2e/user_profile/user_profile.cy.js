@@ -19,7 +19,7 @@ describe('When verifying user profile functionality', () => {
     cy.get('.MuiPaper-root button').contains("Add").click();
 
     CheckoutCommands.fillAddressForm({
-      type: "Home",
+      type: "Home - test adress",
       street: "Street 2",
       country: "Poland",
       phone: "111111111",
@@ -52,7 +52,9 @@ describe('When verifying user profile functionality', () => {
   });
 
   it('should delete the address successfully', () => {
-    deleteAddressByLabel("Home");
+    deleteAddressByLabel("Home - test adress");
+    verifyAdressNotExistByLabel('Home - test adress')
+
   });
 });
 
@@ -98,4 +100,8 @@ function deleteAddressByLabel(label) {
     clickFormButton("Remove");
   });
   cy.wait('@deleteAddress');
+}
+
+function verifyAdressNotExistByLabel(label){
+  cy.get('.MuiStack-root').should('not.contain.text', label);
 }

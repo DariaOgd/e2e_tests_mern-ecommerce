@@ -9,8 +9,8 @@ describe('Cart', () => {
 
   it('should add the product to the user’s cart and return the cart item - only one', () => {
     const payload = {
-      product: '67713e8d65feefc82f4a989e',
-      user: '6771210565feefc82f4a960d',
+      product: '67fbb71e4f39531d4ea66922',
+      user: '67fbbeedef538802e1d50f10',
     };
 
     ApiHelper.addProductToCart(payload).then((response) => {
@@ -21,9 +21,9 @@ describe('Cart', () => {
       expect(res).to.have.property('quantity', 1);
       expect(res).to.have.property('user', payload.user);
       expect(res.product).to.have.property('_id', payload.product);
-      expect(res.product).to.have.property('title', 'North face storm strke');
-      expect(res.product).to.have.property('price', 250);
-      expect(res.product).to.have.nested.property('brand.name', 'The North Face');
+      expect(res.product).to.have.property('title', 'Sneakersy Puma Club II Era Suede 400717');
+      expect(res.product).to.have.property('price', 600);
+      expect(res.product).to.have.nested.property('brand.name', 'Puma');
       expect(res.product.images).to.be.an('array').and.have.length.greaterThan(0);
       expect(res.product).to.have.property('isDeleted', false);
     });
@@ -31,8 +31,8 @@ describe('Cart', () => {
 
   it('should add the Nike product to the user’s cart and return the cart item', () => {
     const payload = {
-      product: '677126bc65feefc82f4a96a0',
-      user: '6771210565feefc82f4a960d',
+      product: '67fbb76a4f39531d4ea6692a',
+      user: '67fbbeedef538802e1d50f10',
     };
 
     ApiHelper.addProductToCart(payload).then((response) => {
@@ -41,9 +41,9 @@ describe('Cart', () => {
       cartId = res._id;
 
       expect(res).to.have.property('quantity', 1);
-      expect(res.product).to.have.property('title', 'Nike');
-      expect(res.product).to.have.property('price', 100);
-      expect(res.product).to.have.nested.property('brand.name', 'Nike');
+      expect(res.product).to.have.property('title', 'Sneakersy W-3C098-2A324 Różowy');
+      expect(res.product).to.have.property('price', 600);
+      expect(res.product).to.have.nested.property('brand.name', 'Under Armour');
       expect(res.product.images).to.be.an('array').and.have.length.greaterThan(0);
     });
   });

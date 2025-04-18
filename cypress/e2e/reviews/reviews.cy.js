@@ -9,18 +9,9 @@ describe('When veryfing user revierws', () => {
         CommonHelper.LogIn(userEmail, userPassword)
       })
 
-    it('should check if product detail contains reviews sectrion', () => {
-        openFirstProductDetails()
 
-        cy.get('.MuiStack-root').contains("Reviews").parent().within(() => {
-            cy.get('h4').should('contain', "Reviews")
-            cy.get('.MuiStack-root .MuiRating-root')
-            .invoke('attr', 'aria-label')
-            .should('match', /^\d+\sStars$/)
-        })
-    })
 
-    it.only('user should have possibility to add a review, edit it and delete it', () => {
+    it('user should have possibility to add a review, edit it and delete it', () => {
         const randomNumber = Math.floor(Math.random() * 10000);
         const comment = `Komentarz nr. ${randomNumber}`;
         openFirstProductDetails()
@@ -38,6 +29,25 @@ describe('When veryfing user revierws', () => {
         //delete
         ProductDetailsCommands.deleteComment(comment + "Edit")
         verfyIfREviewDoesNotExit(comment + "Edit")
+    })
+    it('should check if product detail contains reviews sectrion', () => {
+      openFirstProductDetails()
+
+      cy.get('.MuiStack-root').contains("Reviews").parent().within(() => {
+          cy.get('h4').should('contain', "Reviews")
+          cy.get('.MuiStack-root .MuiRating-root')
+          .invoke('attr', 'aria-label')
+          .should('match', /^\d+\sStars$/)
+      })
+  })
+
+    it('shouldnot allow user to add empty revire', () => {
+      const randomNumber = Math.floor(Math.random() * 10000);
+      openFirstProductDetails()
+
+      ProductDetailsCommands.writeAReview(" ")
+      selectStar(3)
+      assertReviewNotAdded()
     })
 
 })
@@ -66,3 +76,18 @@ function verfyIfREviewDoesNotExit(commentText){
     cy.get('.MuiStack-root').should('not.contain',commentText)
 
 }
+
+function assertReviewNotAdded(){
+  cy.intercept('POST', '**/reviews').as('postReview');
+  
+cy.get(".MuiButtonBase-root").contains("Add review").click()
+
+cy.wait('@postReview').then((interception) => {
+    // Check status code
+    expect(interception.response.statusCode).to.be.oneOf([500, 400, 422]);
+})
+
+}
+
+
+

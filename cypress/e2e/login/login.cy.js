@@ -47,6 +47,12 @@ describe('Given login page', () => {
         CommonHelper.verifyToastModal('login successful')
         verifyAdminButtonInHeader()
     })
+
+    it.only('should keep user loggedf after page refresh', () => {
+        CommonHelper.LogIn('Pawel@gmail.com', 'Password123!')
+        cy.reload()
+        verifyUserNameIsCorrectlyDisplayedInHeader('Pael')
+    })
 })
 
 

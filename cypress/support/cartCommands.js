@@ -58,22 +58,28 @@ class CartCommands {
     });
   }
   static formatSubtotal(subtotal) {
-    return Number.isInteger(subtotal)
-      ? subtotal.toFixed(0).replace('.', ',') // e.g. 100 → "100"
-      : subtotal.toFixed(2).replace('.', ','); // e.g. 199.99 → "199,99"
+    return parseFloat(subtotal).toFixed(2); // "1200.00"
   }
+  
 
   static assertSubtotalInCart(expectedSubtotal) {
-    const formattedSubtotal = this.formatSubtotal(expectedSubtotal);
-  
     cy.get('h6').then(($h6) => {
-      const found = [...$h6].some(el => el.innerText.includes(formattedSubtotal));
+      const subtotalInCart = [...$h6]
+        .map(el => el.innerText)
+        .map(text => parseFloat(text.replace(/[^0-9.]/g, ''))) // usuwa $, spacje, itd.
+        .filter(num => !isNaN(num)); // tylko liczby
+  
+      const expected = parseFloat(expectedSubtotal);
+  
+      const found = subtotalInCart.some(num => num === expected);
+  
       expect(
         found,
-        `Expected subtotal "${formattedSubtotal}" to be visible in the cart`
+        `Expected subtotal "${expected}" to be visible in the cart`
       ).to.be.true;
     });
   }
+  
 
   static assertProductNamesInCart(expectedNames) {
     cy.get('.MuiStack-root a').then(($links) => {

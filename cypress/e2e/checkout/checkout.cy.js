@@ -1,7 +1,8 @@
 import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands"
 import CheckoutCommands from "../../support/checkoutCommands"
-
+import AdminHelper from "../../support/adminHelper"
+import ApiHelper from "../../support/apiHelper"
 describe('When verifying checkout', () => {
   let orderId, total, productName
 
@@ -10,6 +11,10 @@ describe('When verifying checkout', () => {
     const userEmail = 'Pawel@gmail.com'
     const userPassword = 'Password123!'
     CommonHelper.LogIn(userEmail, userPassword)
+    ApiHelper.deleteAllItemsFromCart()
+
+  })
+  afterEach(() => {
   })
 
   //dodac subtotal i sprawdzic przy checkoucie
@@ -95,6 +100,31 @@ describe('When verifying checkout', () => {
 
   })
 
+  it("should complete checkout successfully with card payment", () => {
+    openFirstProductDetails()
+    CartCommands.addToCart()
+    cy.wait(1000)
+    CartCommands.openCartFromHeader()
+    CheckoutCommands.navigateToCheckout()
+    cy.wait(2000)
+
+    CheckoutCommands.fillAddressForm({
+      type: "Home",
+      street: "Street 2",
+      country: "Poland",
+      phone: "111111111",
+      city: "gdansk",
+      state: "80-000",
+      postalCode: "1"
+    })
+
+    CheckoutCommands.submitAddressForm()
+    CheckoutCommands.selectPaymentMethod("Cash")
+    CheckoutCommands.placeOrder()
+    verifyConfirmationText()
+
+  })
+
   it('should not allow checkout if no payment method is selected', () => {
     openFirstProductDetails()
     CartCommands.addToCart()
@@ -122,6 +152,50 @@ describe('When verifying checkout', () => {
   })
 
   //wrong address and no adress
+
+  it('form should validate if address is incorrect', () => {
+    openFirstProductDetails()
+    CartCommands.addToCart()
+    cy.wait(1000)
+    CartCommands.openCartFromHeader()
+    CheckoutCommands.navigateToCheckout()
+    cy.wait(2000)
+    cy.get(".MuiStack-root").contains("Reset").click()
+    CheckoutCommands.fillAddressForm({
+      type: "1",
+      street: "1",
+      country: "1",
+      phone: "aaaa",
+      city: "1",
+      state: "1",
+      postalCode: "abc"
+    })
+    CheckoutCommands.submitAddressForm()
+    CheckoutCommands.selectPaymentMethod("Cash")
+
+    CheckoutCommands.placeOrder()
+    submitOrderExpectingFailure()
+
+  })
+
+  it.only('form should validate if address is empty', () => {
+    openFirstProductDetails()
+    CartCommands.addToCart()
+    cy.wait(1000)
+    CartCommands.openCartFromHeader()
+    CheckoutCommands.navigateToCheckout()
+    cy.wait(2000)
+    cy.get(".MuiStack-root").contains("Reset").click()
+    cy.get(".MuiStack-root").contains("Add").click()
+
+
+    CheckoutCommands.submitAddressForm()
+    CheckoutCommands.selectPaymentMethod("Cash")
+
+    CheckoutCommands.placeOrder()
+    submitOrderExpectingFailure()
+
+  })
 })
 
 function submitOrderExpectingFailure(){
