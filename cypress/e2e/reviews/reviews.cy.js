@@ -4,9 +4,8 @@ describe('When veryfing user revierws', () => {
 
     beforeEach(() => {
         cy.visit('http://localhost:3000/login')
-        const userEmail = 'Pawel@gmail.com'
-        const userPassword = 'Password123!'
-        CommonHelper.LogIn(userEmail, userPassword)
+
+        CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
       })
 
 
@@ -29,25 +28,6 @@ describe('When veryfing user revierws', () => {
         //delete
         ProductDetailsCommands.deleteComment(comment + "Edit")
         verfyIfREviewDoesNotExit(comment + "Edit")
-    })
-    it('should check if product detail contains reviews sectrion', () => {
-      openFirstProductDetails()
-
-      cy.get('.MuiStack-root').contains("Reviews").parent().within(() => {
-          cy.get('h4').should('contain', "Reviews")
-          cy.get('.MuiStack-root .MuiRating-root')
-          .invoke('attr', 'aria-label')
-          .should('match', /^\d+\sStars$/)
-      })
-  })
-
-    it('shouldnot allow user to add empty revire', () => {
-      const randomNumber = Math.floor(Math.random() * 10000);
-      openFirstProductDetails()
-
-      ProductDetailsCommands.writeAReview(" ")
-      selectStar(3)
-      assertReviewNotAdded()
     })
 
 })

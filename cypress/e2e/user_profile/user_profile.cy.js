@@ -4,9 +4,8 @@ import CheckoutCommands from "../../support/checkoutCommands";
 describe('When verifying user profile functionality', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/login');
-    const userEmail = 'Pawel@gmail.com';
-    const userPassword = 'Password123!';
-    CommonHelper.LogIn(userEmail, userPassword);
+
+    CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
     selectHeaderMenuOption('Profile');
     cy.url().should('include', '/profile');
   });

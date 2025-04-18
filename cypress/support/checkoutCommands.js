@@ -29,6 +29,49 @@ class CheckoutCommands {
         cy.get(".MuiStack-root").contains("Add").click()
     
     }
+    static verifyConfirmationText(){
+      cy.get('.MuiPaper-root')
+      .invoke('text')
+      .should('match', /Your Order #[a-f0-9]+ is confirmed/)
+  }
+  static verifyMostRecentOrder( orderId, total, productName) {
+    cy.get(".MuiStack-root .MuiPaper-root").first().within(() => {
+      cy.contains('Order Number').parent().should('contain', orderId)
+      cy.contains('Total Amount').parent().should('contain', total)
+      cy.contains(productName)
+    });
+  }
+  
+
+
+
+static assertCheckoutTotalMatchesCartSubtotalWithFees(subtotal, fixedFees = 10.55) {
+  const expectedTotal = subtotal + fixedFees;
+
+  cy.get('.MuiStack-root').contains('Total').parent().within(() => {
+    cy.get('.MuiTypography-root').last().invoke('text').then((totalText) => {
+      const numericTotal = parseFloat(totalText.replace(/[^0-9.]/g, ''));
+      expect(numericTotal).to.eq(expectedTotal);
+    });
+  });
+}
+static removeItemsFromCheckout(){
+  cy.get(".MuiStack-root").contains("Order summary").parent().contains("Remove").click()
+
+
+}
+static assertCheckoutTotalFormat() {
+  cy.get('.MuiStack-root').contains('Total').parent().within(() => {
+    cy.get('.MuiTypography-root').last()
+      .invoke('text')
+      .as('checkoutTotal');
+  });
+
+  cy.get('@checkoutTotal').then((totalText) => {
+    expect(totalText).to.match(/^\$\d+(\.\d{2})?$/);
+  });
+}
+
 
     
 

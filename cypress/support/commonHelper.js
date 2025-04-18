@@ -106,6 +106,11 @@ static operateOnProductByIndex(index = 0, callback) {
     });
     cy.get('ul[role="menu"]').contains(option).click();
   }
+
+  static captureNameAndPrice(nameAlias, priceAlias) {
+    cy.get('h6').first().invoke('text').as(nameAlias);
+    cy.get('p').eq(1).invoke('text').as(priceAlias);
+  }
   
     
 

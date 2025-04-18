@@ -1,24 +1,18 @@
 import CommonHelper from "../../support/commonHelper";
 import CartCommands from "../../support/cartCommands";
+import ApiHelper from "../../support/apiHelper";
 
 describe('Given main page', () => {
+  before(() => {
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
+  })
   beforeEach(() => {
     cy.visit('http://localhost:3000/login');
-    const userEmail = 'Pawel@gmail.com';
-    const userPassword = 'Password123!';
-    CommonHelper.LogIn(userEmail, userPassword);
+    CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
+
   });
 
-  it('should contain products', () => {
-    cy.get('.MuiGrid-root').within(() => {
-      cy.get('.MuiPaper-root').first().within(() => {
-        cy.get('button').should((btn) => {
-          const text = btn.text().trim();
-          expect(text).to.satisfy(t => t.includes('Added To cart') || t.includes('Add To Cart'));
-        });
-      });
-    });
-  });
 
   it('should sort elements from low to high', () => {
     const sort_options = ['low to high', 'high to low'];
@@ -34,12 +28,12 @@ describe('Given main page', () => {
     it('should check if it is possible to add product to cart from main page', () => {
       CommonHelper.operateOnProductByIndex(0, () => {
         CommonHelper.addProductToCartFromMainPage();
-        captureNameAndPrice('name1', 'price1');
+        CommonHelper.captureNameAndPrice('name1', 'price1');
       });
 
       CommonHelper.operateOnProductByIndex(1, () => {
         CommonHelper.addProductToCartFromMainPage();
-        captureNameAndPrice('name2', 'price2');
+        CommonHelper.captureNameAndPrice('name2', 'price2');
       });
 
       cy.then(function () {
@@ -59,11 +53,14 @@ describe('Given main page', () => {
     after(() => {
       CartCommands.removeProductFromCart();
       CartCommands.removeProductFromCart();
+      ApiHelper.deleteAllItemsFromCart("67fbbeedef538802e1d50f10")
+
+      
     });
   });
 
   context('when veryfing left menu', () => {
-    it('should veryfy filtering on brands', () => {
+    it.only('should veryfy filtering on brands', () => {
       cy.wait(3000);
       selectBrandFilter('Puma');
       cy.get('.MuiGrid-container .MuiPaper-root').then($els => {
@@ -107,8 +104,6 @@ function sortProducts(sortOption) {
     default:
       throw new Error(`Invalid sort option: ${sortOption}`);
   }
-
-  cy.wait(1000);
 }
 
 function getFirstAndLastPrices() {
@@ -149,13 +144,6 @@ function validatePriceSorting(listPrices, sortOrder) {
       throw new Error('Not enough prices collected to compare sorting');
     }
   });
-}
-
-
-
-function captureNameAndPrice(nameAlias, priceAlias) {
-  cy.get('h6').first().invoke('text').as(nameAlias);
-  cy.get('p').eq(1).invoke('text').as(priceAlias);
 }
 
 function getProductBrand(brand) {

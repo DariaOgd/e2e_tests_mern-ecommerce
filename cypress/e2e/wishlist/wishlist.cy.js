@@ -1,28 +1,28 @@
 import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands";
+import ApiHelper from "../../support/apiHelper";
 
 describe('When veryfying user wishlist', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3000/login')
-        const userEmail = 'Pawel@gmail.com'
-        const userPassword = 'Password123!'
-        CommonHelper.LogIn(userEmail, userPassword)
+
+        CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
+      })
+      after(() => {
+        ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
+    
       })
 
       let headerText; 
       it('Should add product to wishlist from product detail page', () => {
         openFirstProductDetails();
-        cy.get('.MuiStack-root h4').first()
-          .invoke('text')
-          .then((text) => {
-            const headerText = text.trim();
-            cy.log(headerText);
-            addToWishlist()
-            openWishlist();
-            verifyProductInWishlist(headerText, 0)
-            removeProductFromWishlist()
-            cy.get(".MuiStack-root").should('not.have.class', '.MuiGrid-container')
-        }); 
+
+        getProductTitleFromDetailsPage().then((title) => {
+          cy.log(title);
+          addProductToWishlistAndVerify(title);
+          removeProductFromWishlistAndVerifyEmpty();
+        });
       })
 
       it('should add a note to a product in a wishlist', () => {
@@ -97,4 +97,21 @@ function operateOnWishlistProductByIndex(index = 0, callback) {
     .within(() => {
       callback();
     });
+}
+
+
+
+function getProductTitleFromDetailsPage() {
+  return cy.get('.MuiStack-root h4').first().invoke('text').then((text) => text.trim());
+}
+
+function addProductToWishlistAndVerify(title, index = 0) {
+  addToWishlist();
+  openWishlist();
+  verifyProductInWishlist(title, index);
+}
+
+function removeProductFromWishlistAndVerifyEmpty() {
+  removeProductFromWishlist();
+  cy.get(".MuiStack-root").should('not.have.class', '.MuiGrid-container');
 }

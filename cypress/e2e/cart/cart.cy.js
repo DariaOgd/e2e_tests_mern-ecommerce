@@ -5,24 +5,23 @@ import ApiHelper from "../../support/apiHelper"
 describe('When verifying cart', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/login')
-    const userEmail = 'Pawel@gmail.com'
-    const userPassword = 'Password123!'
-    CommonHelper.LogIn(userEmail, userPassword)
+
+    CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
   })
 
   after(() => {
-    ApiHelper.deleteAllItemsFromCart("67fbbeedef538802e1d50f10")
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
   })
 
   it('should add products to cart and persist cart after reload', function () {
     CommonHelper.operateOnProductByIndex(0, () => {
       CommonHelper.addProductToCartFromMainPage();
-      captureNameAndPrice.call(this, 'name1', 'price1'); // 👈 bardzo ważne: przekazanie `this`
+      CommonHelper.captureNameAndPrice.call(this, 'name1', 'price1'); // 👈 bardzo ważne: przekazanie `this`
     });
   
     CommonHelper.operateOnProductByIndex(1, () => {
       CommonHelper.addProductToCartFromMainPage();
-      captureNameAndPrice.call(this, 'name2', 'price2');
+      CommonHelper.captureNameAndPrice.call(this, 'name2', 'price2');
     });
   
     cy.then(function () {
@@ -46,7 +45,3 @@ describe('When verifying cart', () => {
   
 })
 
-function captureNameAndPrice(nameAlias, priceAlias) {
-  cy.get('h6').first().invoke('text').as(nameAlias)
-  cy.get('p').eq(1).invoke('text').as(priceAlias)
-}

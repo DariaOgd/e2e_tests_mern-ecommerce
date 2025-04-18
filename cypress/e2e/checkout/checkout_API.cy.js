@@ -2,8 +2,14 @@ import ApiHelper from '../../support/apiHelper';
 
 describe('Should verify checkout process', () => {
   before(() => {
-    ApiHelper.requestLogIn('Pawel@gmail.com', 'Password123!');
+    ApiHelper.requestLogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
   });
+  after(() => {
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
+  })
 
   const paymentMethods = [
     { paymentType: 'cash', paymentCode: 'COD', fixture: 'orders/checkout_with_cash_payload' },

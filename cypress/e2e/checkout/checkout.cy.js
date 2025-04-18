@@ -1,30 +1,29 @@
 import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands"
 import CheckoutCommands from "../../support/checkoutCommands"
-import AdminHelper from "../../support/adminHelper"
 import ApiHelper from "../../support/apiHelper"
 describe('When verifying checkout', () => {
   let orderId, total, productName
 
   beforeEach(() => {
     cy.visit('http://localhost:3000/login')
-    const userEmail = 'Pawel@gmail.com'
-    const userPassword = 'Password123!'
-    CommonHelper.LogIn(userEmail, userPassword)
-    ApiHelper.deleteAllItemsFromCart()
+
+    CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
 
   })
   afterEach(() => {
   })
 
   //dodac subtotal i sprawdzic przy checkoucie
-  it('should complete checkout successfully with card payment', () => {
-    openFirstProductDetails()
-    CartCommands.addToCart()
-    cy.wait(1000)
-    CartCommands.openCartFromHeader()
-    CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
+  it.only('should complete checkout successfully with card payment', () => {
+    openFirstProductDetails();
+    CartCommands.addToCart();
+    cy.wait(1000);
+    CartCommands.openCartFromHeader();
+    CheckoutCommands.navigateToCheckout();
+    cy.wait(2000);
+  
     CheckoutCommands.fillAddressForm({
       type: "Home",
       street: "Street 2",
@@ -33,44 +32,23 @@ describe('When verifying checkout', () => {
       city: "gdansk",
       state: "80-000",
       postalCode: "1"
-    })
-    CheckoutCommands.submitAddressForm()
-    CheckoutCommands.selectPaymentMethod()
-    cy.get('.MuiStack-root').contains('Total').parent().within(() => {
-      cy.get('.MuiTypography-root').last()
-        .invoke('text')
-        .then((totalText) => {
-          total = totalText
-        })
-    })
-    cy.get(".MuiStack-root").contains("Order summary").parent().within(() => {
-      cy.get(".MuiPaper-root").contains("Quantity").parent().find('a')
-        .invoke('text')
-        .then((linkText) => {
-          productName = linkText
-        })
-    })
-    CheckoutCommands.placeOrder()
-    verifyConfirmationText()
-  })
+    });
+  
+    CheckoutCommands.submitAddressForm();
+    CheckoutCommands.selectPaymentMethod();
+    CheckoutCommands.assertCheckoutTotalFormat()
 
-  it('should display correct order details after placing an order', () => {
-    cy.visit('http://localhost:3000/orders')
+  
+    CheckoutCommands.placeOrder();
+    CheckoutCommands.verifyConfirmationText();
+  });
 
-
-
-    cy.then(() => {
-      verifyOrderItem(0, orderId, total, productName)
-    })
-  })
   
   it.skip('should prevent checkout when address form is incomplete', () => {
     openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
     CheckoutCommands.selectPaymentMethod()
     submitOrderExpectingFailure()
   })
@@ -78,10 +56,8 @@ describe('When verifying checkout', () => {
   it("should complete checkout successfully with cash payment", () => {
     openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
 
     CheckoutCommands.fillAddressForm({
       type: "Home",
@@ -96,17 +72,15 @@ describe('When verifying checkout', () => {
     CheckoutCommands.submitAddressForm()
     CheckoutCommands.selectPaymentMethod("Cash")
     CheckoutCommands.placeOrder()
-    verifyConfirmationText()
+    CheckoutCommands.verifyConfirmationText()
 
   })
 
   it("should complete checkout successfully with card payment", () => {
     openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
 
     CheckoutCommands.fillAddressForm({
       type: "Home",
@@ -117,12 +91,10 @@ describe('When verifying checkout', () => {
       state: "80-000",
       postalCode: "1"
     })
-
     CheckoutCommands.submitAddressForm()
     CheckoutCommands.selectPaymentMethod("Cash")
     CheckoutCommands.placeOrder()
-    verifyConfirmationText()
-
+    CheckoutCommands.verifyConfirmationText()
   })
 
   it('should not allow checkout if no payment method is selected', () => {
@@ -148,7 +120,7 @@ describe('When verifying checkout', () => {
     submitOrderExpectingFailure()
 
     //after
-    cy.get(".MuiStack-root").contains("Order summary").parent().contains("Remove").click()
+    CheckoutCommands.removeItemsFromCheckout()
   })
 
   //wrong address and no adress
@@ -178,48 +150,83 @@ describe('When verifying checkout', () => {
 
   })
 
-  it.only('form should validate if address is empty', () => {
+  it('form should validate if address is empty', () => {
     openFirstProductDetails()
     CartCommands.addToCart()
     cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
     cy.wait(2000)
-    cy.get(".MuiStack-root").contains("Reset").click()
-    cy.get(".MuiStack-root").contains("Add").click()
+    resetAdress()
+    clickOnAddAdress()
 
 
     CheckoutCommands.submitAddressForm()
     CheckoutCommands.selectPaymentMethod("Cash")
 
     CheckoutCommands.placeOrder()
-    submitOrderExpectingFailure()
+    CheckoutCommands.submitOrderExpectingFailure()
 
   })
 })
 
-function submitOrderExpectingFailure(){
-    cy.intercept('POST', '/orders').as('createOrder')
-    cy.get(".MuiStack-root").contains("Pay and order").click()
-    cy.wait('@createOrder').its('response.statusCode').should('not.be.oneOf', [200, 201])
-}
 // Helper functions
+
+describe("Verying cart to checkout flow", () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000/login')
+
+    CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
+  })
+
+  it("should correctly calculate total in checkout based on cart subtotal and additional fees", () => {
+    CommonHelper.operateOnProductByIndex(0, () => {
+      CommonHelper.addProductToCartFromMainPage();
+      CommonHelper.captureNameAndPrice('name1', 'price1');
+    });
+
+    CommonHelper.operateOnProductByIndex(1, () => {
+      CommonHelper.addProductToCartFromMainPage();
+      CommonHelper.captureNameAndPrice('name2', 'price2');
+    });
+    CartCommands.openCartFromHeader()
+
+    cy.then(function () {
+      const prices = [this.price1, this.price2];
+      const subtotal = CartCommands.calculateSubtotal(prices);
+      cy.wrap(subtotal).as('subtotal');
+      CheckoutCommands.navigateToCheckout()
+
+      cy.get('@subtotal').then((subtotal) => {
+        CheckoutCommands.assertCheckoutTotalMatchesCartSubtotalWithFees(subtotal);
+      });
+
+
+    });
+  })
+
+})
+
+
 
 function openFirstProductDetails() {
   cy.get('.MuiGrid-container .MuiPaper-root').first().click()
 }
 
-function verifyOrderItem(index, orderId, total, productName) {
-    cy.get(".MuiPaper-root").first(() => {
-        cy.contains('Order Number').parent().should('contain', orderId)
-        cy.contains('Total Amount').parent().should('contain', total)
-        cy.contains(productName)
-    })
+function submitOrderExpectingFailure(){
+  cy.intercept('POST', '/orders').as('createOrder')
+  cy.get(".MuiStack-root").contains("Pay and order").click()
+  cy.wait('@createOrder').its('response.statusCode').should('not.be.oneOf', [200, 201])
 }
+function resetAdress(){
+  cy.get(".MuiStack-root").contains("Reset").click()
 
-function verifyConfirmationText(){
-    cy.get('.MuiPaper-root')
-    .invoke('text')
-    .should('match', /Your Order #[a-f0-9]+ is confirmed/)
+
 }
+function clickOnAddAdress(){
+  cy.get(".MuiStack-root").contains("Add").click()
 
+
+}

@@ -7,7 +7,7 @@ describe('Given register page', () => {
         let number = generateTwoDigitNumber()
         const userEmail = `user_name_${number}@gmail.com`
         const userName = `user_name_${number}`
-        const userPassword =  'Password123!'
+        const userPassword =  Cypress.env("userPassword")
         CommonHelper.Register(userName, userEmail, userPassword, true)
         CommonHelper.verifyUserNameIsCorrectlyDisplayedInHeader(userName)
     })
@@ -16,7 +16,7 @@ describe('Given register page', () => {
         let number = generateTwoDigitNumber()
         const userEmail = 'Pawel@gmail.com'
         const userName = `user_name_${number}`
-        const userPassword =  'Password123!'
+        const userPassword =  Cypress.env("userPassword")
         CommonHelper.Register(userName, userEmail, userPassword, true)
         verifyRegisterFormFieldsExist()
     })

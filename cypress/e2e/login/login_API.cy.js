@@ -58,6 +58,8 @@ describe('When verifying login process', () => {
   context('should verify admin user authentication', () => {
     it('should login admin with correct credentials using ApiHelper', () => {
       cy.fixture('auth/admin_login_correct_credentials_payload').then((user) => {
+        user.email = Cypress.env("adminEmail");
+        user.password = Cypress.env("adminPassword");
         ApiHelper.requestLogIn(user.email, user.password).then((response) => {
           expect(response.status).to.eq(200);
 

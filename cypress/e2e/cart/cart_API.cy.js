@@ -2,7 +2,7 @@ import ApiHelper from '../../support/apiHelper';
 
 describe('Cart', () => {
   before(() => {
-    ApiHelper.requestLogIn('Pawel@gmail.com', 'Password123!');
+    ApiHelper.requestLogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
   });
 
   let cartId;
@@ -10,7 +10,7 @@ describe('Cart', () => {
   it('should add the product to the user’s cart and return the cart item - only one', () => {
     const payload = {
       product: '67fbb71e4f39531d4ea66922',
-      user: '67fbbeedef538802e1d50f10',
+      user: Cypress.env("user_ID"),
     };
 
     ApiHelper.addProductToCart(payload).then((response) => {
@@ -32,7 +32,7 @@ describe('Cart', () => {
   it('should add the Nike product to the user’s cart and return the cart item', () => {
     const payload = {
       product: '67fbb76a4f39531d4ea6692a',
-      user: '67fbbeedef538802e1d50f10',
+      user: Cypress.env("user_ID"),
     };
 
     ApiHelper.addProductToCart(payload).then((response) => {
@@ -59,7 +59,7 @@ describe('Cart', () => {
   });
 
   it('should make the cart empty', () => {
-    const userId = '6771210565feefc82f4a960d';
+    const userId = Cypress.env("user_ID") ;
     ApiHelper.deleteAllItemsFromCart(userId).then((res) => {
       expect(res.status).to.eq(204);
     });

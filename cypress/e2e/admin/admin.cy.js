@@ -8,7 +8,7 @@ describe('Admin Product Management Flow', () => {
   context("when veryfing admin", () => {
     beforeEach(() => {
       cy.visit('http://localhost:3000/login');
-      commonHelper.LogIn('Admin1@gmail.com', 'Password123!');
+      commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     });
 
     it('should verify if admin profile shows Admin label', () => {
@@ -60,9 +60,7 @@ describe('Admin Product Management Flow', () => {
   context('When veryfing end user', () => {
     beforeEach(() => {
       cy.visit('http://localhost:3000/login');
-      const userEmail = 'Pawel@gmail.com';
-      const userPassword = 'Password123!';
-      commonHelper.LogIn(userEmail, userPassword);
+      commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
     });
 
     it('user should not see admin deleted product', () => {
@@ -72,7 +70,7 @@ describe('Admin Product Management Flow', () => {
   });
 });
 
-describe.only('E2E flow: Admin adds product, user sees it', () => {
+describe('E2E flow: Admin adds product, user sees it', () => {
   let productTitle;
   it('should let admin add a product and user see it on homepage', () => {
     const random = Math.floor(Math.random() * 100000);
@@ -96,25 +94,24 @@ describe.only('E2E flow: Admin adds product, user sees it', () => {
 
     // Log in as admin
     cy.visit('http://localhost:3000/login');
-    commonHelper.LogIn('Admin1@gmail.com', 'Password123!');
+    commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     openProfileDropdownAndSelect('Add new Product');
     AdminHelper.fillProductFormFields(newProduct);
     AdminHelper.clickFormButton('Add Product');
     assertProductVisibleInList(productTitle);
 
-    // Logout admin
     cy.get('header .MuiAvatar-root').click();
     cy.contains('Logout').click();
 
     // Log in as user
     cy.visit('http://localhost:3000/login');
-    commonHelper.LogIn('Pawel@gmail.com', 'Password123!');
-    cy.get('.MuiGrid-root .MuiPaper-root').should('contain', productTitle);
+    commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
+    assertProductIsVisibleOnMainPage(productTitle)
   });
   after(() => {
     commonHelper.Logout()
     cy.visit('http://localhost:3000/login');
-    commonHelper.LogIn('Admin1@gmail.com', 'Password123!');
+    commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     cy.wait(1000);
     clickNextUntilDisabled()
 
@@ -158,4 +155,10 @@ function clickNextUntilDisabled() {
         cy.log('Pagination end reached.');
       }
     });
+}
+
+function assertProductIsVisibleOnMainPage(productTitle){
+  cy.get('.MuiGrid-root .MuiPaper-root').should('contain', productTitle);
+
+
 }

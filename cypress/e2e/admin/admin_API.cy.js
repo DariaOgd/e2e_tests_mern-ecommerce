@@ -2,14 +2,22 @@ import ApiHelper from "../../support/apiHelper";
 
 describe('Admin API Login', () => {
   before(() => {
-    ApiHelper.requestLogIn('Admin1@gmail.com', 'Password123!');
+    ApiHelper.requestLogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
+
   });
 
   let productId;
 
   it('should create a new product and return product data', () => {
     cy.fixture('admin/product_add_payload').then((productPayload) => {
-      ApiHelper.createProduct(productPayload).then((response) => {
+      const user = {
+        ...productPayload,
+        email: Cypress.env("adminEmail"),
+        password: Cypress.env("adminPassword")
+      };
+
+      ApiHelper.createProduct(user).then((response) => {
+
         expect(response.status).to.eq(201);
         expect(response.body).to.have.property('_id');
         productId = response.body._id;
@@ -59,7 +67,7 @@ describe('Admin API Login', () => {
 
 describe.skip('should check if non-admin user can not add perform admin crud operations', () => {
   before(() => {
-    ApiHelper.requestLogIn('Pawel@gmail.com', 'Password123!');
+    ApiHelper.requestLogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
   });
 
   it('should not be possible to add a product', () => {
