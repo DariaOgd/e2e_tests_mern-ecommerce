@@ -7,7 +7,7 @@ describe('Admin Product Management Flow', () => {
 
   context("when veryfing admin", () => {
     beforeEach(() => {
-      cy.visit('http://localhost:3000/login');
+      cy.visit('/login');
       commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     });
 
@@ -59,7 +59,7 @@ describe('Admin Product Management Flow', () => {
 
   context('When veryfing end user', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:3000/login');
+      cy.visit('/login');
       commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
     });
 
@@ -92,8 +92,7 @@ describe('E2E flow: Admin adds product, user sees it', () => {
         category: 'Socks'
     };
 
-    // Log in as admin
-    cy.visit('http://localhost:3000/login');
+    cy.visit('/login');
     commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     openProfileDropdownAndSelect('Add new Product');
     AdminHelper.fillProductFormFields(newProduct);
@@ -103,8 +102,7 @@ describe('E2E flow: Admin adds product, user sees it', () => {
     cy.get('header .MuiAvatar-root').click();
     cy.contains('Logout').click();
 
-    // Log in as user
-    cy.visit('http://localhost:3000/login');
+    cy.visit('/login');
     commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
     assertProductIsVisibleOnMainPage(productTitle)
   });
@@ -138,10 +136,6 @@ function deleteLastProduct() {
 
 function assertProductVisibleInList(title) {
   cy.get('.MuiGrid-root').should('contain', title);
-}
-
-function assertProductNotVisibleInList(title) {
-  cy.get('.MuiGrid-root .MuiStack-root').should('not.contain', title);
 }
 
 function clickNextUntilDisabled() {

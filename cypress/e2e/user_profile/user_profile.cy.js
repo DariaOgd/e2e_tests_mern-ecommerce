@@ -1,12 +1,13 @@
 import CommonHelper from "../../support/commonHelper";
 import CheckoutCommands from "../../support/checkoutCommands";
+import FormHelper from "../../support/formHelper"
 
 describe('When verifying user profile functionality', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login');
+    cy.visit('/login');
 
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
-    selectHeaderMenuOption('Profile');
+    CommonHelper.selectUserMenuOption('Profile');
     cy.url().should('include', '/profile');
   });
 
@@ -15,7 +16,7 @@ describe('When verifying user profile functionality', () => {
   });
 
   it('should verify if user can add new profile data (address)', () => {
-    cy.get('.MuiPaper-root button').contains("Add").click();
+    CommonHelper.clickOnButton("Add")
 
     CheckoutCommands.fillAddressForm({
       type: "Home - test adress",
@@ -27,7 +28,7 @@ describe('When verifying user profile functionality', () => {
       postalCode: "1"
     });
 
-    clickFormButton("add");
+    FormHelper.clickFormButton("add");
   });
 
   it('should verify address data is displayed correctly', () => {
@@ -43,40 +44,19 @@ describe('When verifying user profile functionality', () => {
 
   it('should update the address data', () => {
     cy.get('.MuiStack-root').contains('HOME').parent().parent().within(() => {
-      clickFormButton("Edit");
+      FormHelper.clickFormButton("Edit");
     });
 
-    updateFormFieldAndSubmit("Street", "Updated street");
-    cy.get('form').first().should('contain', "Updated street");
+    FormHelper.updateFormFieldAndSubmit("Street", "Updated street");
   });
 
   it('should delete the address successfully', () => {
-    deleteAddressByLabel("Home - test adress");
+    FormHelper.deleteAddressByLabel("Home - test adress");
     verifyAdressNotExistByLabel('Home - test adress')
 
   });
 });
 
-
-// 🔧 Helper Functions
-
-function selectHeaderMenuOption(option) {
-  cy.get('header').within(() => {
-    cy.get('.MuiAvatar-root').click();
-  });
-  cy.get('ul[role="menu"]').contains(option).click();
-}
-
-function clickFormButton(label) {
-  cy.get("form").contains(label).click();
-}
-
-function updateFormFieldAndSubmit(fieldLabel, newText) {
-  cy.get('form').first().within(() => {
-    cy.contains(fieldLabel).parent().find('input').clear().type(newText);
-    cy.contains("Save Changes").click();
-  });
-}
 
 function assertUserProfileContains({ name, email }) {
   cy.get(".MuiStack-root .MuiPaper-root").within(() => {
@@ -93,13 +73,7 @@ function assertAddressInForm(expectedValues) {
   });
 }
 
-function deleteAddressByLabel(label) {
-  cy.intercept('DELETE', '**/address/*').as('deleteAddress');
-  cy.get('.MuiStack-root').contains(label.toUpperCase()).parent().parent().within(() => {
-    clickFormButton("Remove");
-  });
-  cy.wait('@deleteAddress');
-}
+
 
 function verifyAdressNotExistByLabel(label){
   cy.get('.MuiStack-root').should('not.contain.text', label);

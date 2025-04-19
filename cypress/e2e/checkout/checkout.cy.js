@@ -6,7 +6,7 @@ describe('When verifying checkout', () => {
   let orderId, total, productName
 
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login')
+    cy.visit('/login')
 
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))

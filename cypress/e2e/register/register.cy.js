@@ -1,7 +1,7 @@
 import CommonHelper from "../../support/commonHelper"
 describe('Given register page', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/signup')
+        cy.visit('/signup')
     })
     it('should verify if user can create account with correct provided data', () => {
         let number = generateTwoDigitNumber()

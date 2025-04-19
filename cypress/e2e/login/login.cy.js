@@ -3,7 +3,7 @@ describe('Given login page', () => {
     let userEmail = Cypress.env("userEmail")
     let userPassword = Cypress.env("userPassword")
     beforeEach(() => {
-        cy.visit('http://localhost:3000/login')
+        cy.visit('/login')
     })
     it('should verify if user can log in', () => {
         CommonHelper.LogIn(userEmail, userPassword)

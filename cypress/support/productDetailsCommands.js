@@ -60,6 +60,13 @@ static deleteComment(commentText){
     })
 }
 
+static selectStar(rating) {
+  cy.get('.MuiRating-root').last().within(() => {
+    cy.get(`input[value="${rating}"]`).click({ force: true });
+  });
+}
+
+
 
 
     

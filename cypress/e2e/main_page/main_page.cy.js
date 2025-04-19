@@ -8,7 +8,7 @@ describe('Given main page', () => {
 
   })
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login');
+    cy.visit('/login');
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
 
   });
@@ -80,7 +80,6 @@ describe('Given main page', () => {
   });
 });
 
-// --- Utility Functions ---
 
 function getPriceFromElement(element) {
   return element

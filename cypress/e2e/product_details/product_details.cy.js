@@ -7,7 +7,7 @@ import ApiHelper from "../../support/apiHelper";
 describe('When verifying product details', () => {
 
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login')
+    cy.visit('/login')
 
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
 

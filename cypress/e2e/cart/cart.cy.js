@@ -4,7 +4,7 @@ import ApiHelper from "../../support/apiHelper"
 
 describe('When verifying cart', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login')
+    cy.visit('/login')
 
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
   })
@@ -31,7 +31,7 @@ describe('When verifying cart', () => {
     });
   
     cy.reload().then(() => {
-        cy.visit('http://localhost:3000/cart');
+        cy.visit('/cart');
         cy.wait(2000)
         CartCommands.assertProductPricesInCart([this.price1, this.price2]);
         
