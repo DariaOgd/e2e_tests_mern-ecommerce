@@ -1,5 +1,5 @@
 class ApiHelper {
-    static BASE_URL = Cypress.config('baseUrl');
+    static BASE_URL = Cypress.config('baseUrl_API');
   
     static requestLogIn(email, password) {
       return cy.request('POST', `${this.BASE_URL}/auth/login`, {

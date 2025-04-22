@@ -16,8 +16,8 @@ describe('When verifying checkout', () => {
   })
 
   //dodac subtotal i sprawdzic przy checkoucie
-  it.only('should complete checkout successfully with card payment', () => {
-    openFirstProductDetails();
+  it('should complete checkout successfully with card payment', () => {
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart();
     cy.wait(1000);
     CartCommands.openCartFromHeader();
@@ -45,7 +45,7 @@ describe('When verifying checkout', () => {
 
   
   it.skip('should prevent checkout when address form is incomplete', () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
@@ -54,7 +54,7 @@ describe('When verifying checkout', () => {
   })
 
   it("should complete checkout successfully with cash payment", () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
@@ -77,7 +77,7 @@ describe('When verifying checkout', () => {
   })
 
   it("should complete checkout successfully with card payment", () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
@@ -98,7 +98,7 @@ describe('When verifying checkout', () => {
   })
 
   it('should not allow checkout if no payment method is selected', () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     cy.wait(1000)
     CartCommands.openCartFromHeader()
@@ -126,7 +126,7 @@ describe('When verifying checkout', () => {
   //wrong address and no adress
 
   it('form should validate if address is incorrect', () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     cy.wait(1000)
     CartCommands.openCartFromHeader()
@@ -151,7 +151,7 @@ describe('When verifying checkout', () => {
   })
 
   it('form should validate if address is empty', () => {
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
     cy.wait(1000)
     CartCommands.openCartFromHeader()
@@ -165,7 +165,7 @@ describe('When verifying checkout', () => {
     CheckoutCommands.selectPaymentMethod("Cash")
 
     CheckoutCommands.placeOrder()
-    CheckoutCommands.submitOrderExpectingFailure()
+    submitOrderExpectingFailure()
 
   })
 })
@@ -174,7 +174,7 @@ describe('When verifying checkout', () => {
 
 describe("Verying cart to checkout flow", () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/login')
+    cy.visit('/login')
 
     CommonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"))
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
@@ -209,12 +209,6 @@ describe("Verying cart to checkout flow", () => {
 
 })
 
-
-
-function openFirstProductDetails() {
-  cy.get('.MuiGrid-container .MuiPaper-root').first().click()
-}
-
 function submitOrderExpectingFailure(){
   cy.intercept('POST', '/orders').as('createOrder')
   cy.get(".MuiStack-root").contains("Pay and order").click()
@@ -222,8 +216,6 @@ function submitOrderExpectingFailure(){
 }
 function resetAdress(){
   cy.get(".MuiStack-root").contains("Reset").click()
-
-
 }
 function clickOnAddAdress(){
   cy.get(".MuiStack-root").contains("Add").click()

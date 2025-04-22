@@ -44,6 +44,22 @@ class AdminHelper{
     static assertAdminLabelVisible() {
         cy.get('.MuiToolbar-root button').should('contain', 'Admin');
       }
+
+      static verifyProductNotExist(deletedTitle){
+        cy.get('.MuiGrid-root .MuiPaper-root').should('not.contain', deletedTitle);
+      
+      }
+
+      static assertProductIsVisibleOnMainPage(productTitle){
+        cy.get('.MuiGrid-root .MuiPaper-root').should('contain', productTitle);
+      
+      
+      }
+
+      static assertProductVisibleInAdminDashboardList(title) {
+        cy.get('.MuiGrid-root').should('contain', title);
+      }
+      
       
 }
 

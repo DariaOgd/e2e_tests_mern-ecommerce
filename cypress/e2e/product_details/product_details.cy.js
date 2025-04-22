@@ -21,7 +21,7 @@ describe('When verifying product details', () => {
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
 
 
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
 
     cy.wait(1000)
 
@@ -34,7 +34,7 @@ describe('When verifying product details', () => {
 //to finish
   it('should add product to cart correctly and remove it', () => {
 
-    openFirstProductDetails()
+    CommonHelper.openFirstProductDetails()
     ProductDetailsCommands.setProductQuantity(3, 1)
     assertProductQuantityDisplayed(3)
 
@@ -50,9 +50,6 @@ describe('When verifying product details', () => {
   })
 
 
-  function openFirstProductDetails() {
-    cy.get('.MuiGrid-container .MuiPaper-root').first().click()
-  }
 
 })
 

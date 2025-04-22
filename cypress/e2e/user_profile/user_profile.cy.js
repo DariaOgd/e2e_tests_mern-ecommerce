@@ -1,7 +1,8 @@
 import CommonHelper from "../../support/commonHelper";
 import CheckoutCommands from "../../support/checkoutCommands";
 import FormHelper from "../../support/formHelper"
-
+import ApiHelper from "../../support/apiHelper";
+import CartCommands from "../../support/cartCommands";
 describe('When verifying user profile functionality', () => {
   beforeEach(() => {
     cy.visit('/login');
@@ -42,6 +43,27 @@ describe('When verifying user profile functionality', () => {
     });
   });
 
+  it('should display a newly added profile address in the checkout flow', () => {
+    cy.visit("/")
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+    CommonHelper.addProductToCartFromMainPage()
+    CartCommands.openCartFromHeader();
+
+    CheckoutCommands.navigateToCheckout()
+    const expectedAddress = {
+      street: "Street 2",
+      country: "Poland",
+      phone: "111111111",
+      city: "gdansk",
+      state: "80-000",
+      postalCode: "1"
+    }
+  
+    verifyAddressInCheckout(expectedAddress)
+    ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
+
+  })
+
   it('should update the address data', () => {
     cy.get('.MuiStack-root').contains('HOME').parent().parent().within(() => {
       FormHelper.clickFormButton("Edit");
@@ -77,4 +99,13 @@ function assertAddressInForm(expectedValues) {
 
 function verifyAdressNotExistByLabel(label){
   cy.get('.MuiStack-root').should('not.contain.text', label);
+}
+
+function verifyAddressInCheckout(address) {
+  cy.get(".MuiStack-root").contains('Address').parent().parent().within(() => {
+
+    Object.values(address).forEach(value => {
+      cy.get(".MuiGrid-root .MuiFormControl-root").should('contain.text', value)
+    })
+  })
 }

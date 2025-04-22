@@ -53,7 +53,7 @@ describe('Given main page', () => {
     after(() => {
       CartCommands.removeProductFromCart();
       CartCommands.removeProductFromCart();
-      ApiHelper.deleteAllItemsFromCart("67fbbeedef538802e1d50f10")
+      ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
 
       
     });

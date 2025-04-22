@@ -54,4 +54,38 @@ describe('Should verify checkout process', () => {
       expect(response.status).to.be.oneOf([400, 422, 500]);
     });
   });
+
+  it.only('should complte checkout a order and verify if order id is in iorder', () => {
+    ApiHelper.createOrderFromFixture('orders/checkout_with_cash_payload').then(({ response, payload }) => {
+      expect(response.status).to.eq(201);
+      const res = response.body;
+
+      expect(res).to.have.property('user', payload.user);
+      expect(res).to.have.property('status', 'Pending');
+      expect(res).to.have.property('total', payload.total);
+      expect(res).to.have.property('createdAt');
+      expect(res.item[0].product).to.have.property('price', 250);
+      expect(res.item[0].product).to.have.property('title', 'North face storm strke');
+
+      expect(res.address[0]).to.include({
+        city: payload.address.city,
+        country: payload.address.country,
+        type: payload.address.type,
+      });
+
+      expect(res.item).to.be.an('array').and.have.length.greaterThan(0);
+      return { orderId: res._id, userId: payload.user };
+
+    }).then(({ orderId, userId }) => {
+
+      cy.request(`http://localhost:8000/orders/user/${userId}`).then((orderResponse) => {
+        expect(orderResponse.status).to.eq(200);
+        const orders = orderResponse.body;
+  
+        const found = orders.some(order => order._id === orderId);
+        expect(found, 'Newly created order should be in user orders').to.be.true;
+      });
+
+    })
+  })
 });

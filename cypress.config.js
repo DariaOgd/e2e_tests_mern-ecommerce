@@ -3,6 +3,8 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
+    baseUrl_API: 'http://localhost:8000',
+
     setupNodeEvents(on, config) {
     },
     specPattern: 'cypress/e2e/**/*.cy.js', 

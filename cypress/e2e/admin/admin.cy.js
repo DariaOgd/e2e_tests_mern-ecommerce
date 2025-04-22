@@ -16,7 +16,7 @@ describe('Admin Product Management Flow', () => {
     });
 
     it('should allow admin to add a new product', () => {
-      openProfileDropdownAndSelect('Add new Product');
+      commonHelper.openProfileDropdownAndSelect('Add new Product');
       cy.url().should('include', '/add-product');
 
       randomNumber = Math.floor(Math.random() * 100000);
@@ -38,17 +38,16 @@ describe('Admin Product Management Flow', () => {
         category: 'Socks'
       };
 
-      Cypress.env('productTitle', newProduct.title); // Przechowujemy tytuł dla usera
-      AdminHelper.fillProductFormFields(newProduct);
+      Cypress.env('productTitle', newProduct.title);
       AdminHelper.clickFormButton('Add Product');
-      assertProductVisibleInList(newProduct.title);
+      AdminHelper.assertProductVisibleInAdminDashboardList(newProduct.title);
     });
 
     it('should update the title of the last added product', () => {
       updatedTitle = "Edited Product " + Math.floor(Math.random() * 100000);
       getLastProductCard().contains('Update').click();
       AdminHelper.updateProductTitleField(updatedTitle);
-      assertProductVisibleInList(updatedTitle);
+      AdminHelper.assertProductVisibleInAdminDashboardList(updatedTitle);
     });
 
     it('should delete the last added product', () => {
@@ -65,7 +64,7 @@ describe('Admin Product Management Flow', () => {
 
     it('user should not see admin deleted product', () => {
       const deletedTitle = `Example Product Title ${randomNumber}`;
-      cy.get('.MuiGrid-root .MuiPaper-root').should('not.contain', deletedTitle);
+      AdminHelper.verifyProductNotExist(deletedTitle)
     });
   });
 });
@@ -93,22 +92,22 @@ describe('E2E flow: Admin adds product, user sees it', () => {
     };
 
     cy.visit('/login');
+    
     commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
-    openProfileDropdownAndSelect('Add new Product');
+    commonHelper.selectUserMenuOption('Add new Product')
     AdminHelper.fillProductFormFields(newProduct);
     AdminHelper.clickFormButton('Add Product');
-    assertProductVisibleInList(productTitle);
+    AdminHelper.assertProductVisibleInAdminDashboardList(productTitle);
 
-    cy.get('header .MuiAvatar-root').click();
-    cy.contains('Logout').click();
+    commonHelper.Logout()
 
     cy.visit('/login');
     commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
-    assertProductIsVisibleOnMainPage(productTitle)
+    AdminHelper.assertProductIsVisibleOnMainPage(productTitle)
   });
   after(() => {
     commonHelper.Logout()
-    cy.visit('http://localhost:3000/login');
+    cy.visit('/login');
     commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     cy.wait(1000);
     clickNextUntilDisabled()
@@ -117,14 +116,7 @@ describe('E2E flow: Admin adds product, user sees it', () => {
   });
 });
 
-// 🔧 Reusable Helper Functions
 
-function openProfileDropdownAndSelect(option) {
-  cy.get('header').within(() => {
-    cy.get('.MuiAvatar-root').click();
-  });
-  cy.get('ul[role="menu"]').contains(option).click();
-}
 
 function getLastProductCard() {
   return cy.get('.MuiGrid-root .MuiStack-root').last();
@@ -134,9 +126,6 @@ function deleteLastProduct() {
   getLastProductCard().contains('Delete').click();
 }
 
-function assertProductVisibleInList(title) {
-  cy.get('.MuiGrid-root').should('contain', title);
-}
 
 function clickNextUntilDisabled() {
   cy.get('[aria-label="pagination navigation"] li').last().find('button')
@@ -151,8 +140,3 @@ function clickNextUntilDisabled() {
     });
 }
 
-function assertProductIsVisibleOnMainPage(productTitle){
-  cy.get('.MuiGrid-root .MuiPaper-root').should('contain', productTitle);
-
-
-}

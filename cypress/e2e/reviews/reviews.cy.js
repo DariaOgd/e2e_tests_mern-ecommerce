@@ -18,16 +18,16 @@ describe('When veryfing user revierws', () => {
         ProductDetailsCommands.writeAReview(comment)
         ProductDetailsCommands.selectStar(3)
         ProductDetailsCommands.clickOnAddReviewButton()
-        verfyIfREviewIsCorrect(comment)
+        verfyReviewIsCorrect(comment)
 
         //edit
         ProductDetailsCommands.editComment(comment, comment + "Edit")
 
-        verfyIfREviewIsCorrect(comment + "Edit")
+        verfyReviewIsCorrect(comment + "Edit")
 
         //delete
         ProductDetailsCommands.deleteComment(comment + "Edit")
-        verfyIfREviewDoesNotExit(comment + "Edit")
+        verfyReviewDoesNotExit(comment + "Edit")
     })
 
 })
@@ -36,14 +36,14 @@ describe('When veryfing user revierws', () => {
 
 
 
-function verfyIfREviewIsCorrect(text){
+function verfyReviewIsCorrect(text){
     cy.get('.MuiStack-root').contains(text).parent().parent().within(() => {
         cy.get('motiondiv ')
     })
 }
 
 
-function verfyIfREviewDoesNotExit(commentText){
+function verfyReviewDoesNotExit(commentText){
     cy.get('.MuiStack-root').should('not.contain',commentText)
 
 }
