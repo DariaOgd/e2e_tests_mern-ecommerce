@@ -1,6 +1,6 @@
 import CommonHelper from "../../support/commonHelper"
 import ProductDetailsCommands from "../../support/productDetailsCommands"
-describe('When veryfing user revierws', () => {
+describe('Product reviews functionality tests', () => {
 
     beforeEach(() => {
         cy.visit('/login')
@@ -10,7 +10,7 @@ describe('When veryfing user revierws', () => {
 
 
 
-    it('user should have possibility to add a review, edit it and delete it', () => {
+    it('adds, edits and deletes a product review', () => {
         const randomNumber = Math.floor(Math.random() * 10000);
         const comment = `Komentarz nr. ${randomNumber}`;
         CommonHelper.openFirstProductDetails()
@@ -18,16 +18,13 @@ describe('When veryfing user revierws', () => {
         ProductDetailsCommands.writeAReview(comment)
         ProductDetailsCommands.selectStar(3)
         ProductDetailsCommands.clickOnAddReviewButton()
-        verfyReviewIsCorrect(comment)
+        verifyReviewIsCorrect(comment)
 
-        //edit
         ProductDetailsCommands.editComment(comment, comment + "Edit")
+        verifyReviewIsCorrect(comment + "Edit")
 
-        verfyReviewIsCorrect(comment + "Edit")
-
-        //delete
         ProductDetailsCommands.deleteComment(comment + "Edit")
-        verfyReviewDoesNotExit(comment + "Edit")
+        verifyReviewDoesNotExit(comment + "Edit")
     })
 
 })
@@ -36,14 +33,14 @@ describe('When veryfing user revierws', () => {
 
 
 
-function verfyReviewIsCorrect(text){
+function verifyReviewIsCorrect(text){
     cy.get('.MuiStack-root').contains(text).parent().parent().within(() => {
         cy.get('motiondiv ')
     })
 }
 
 
-function verfyReviewDoesNotExit(commentText){
+function verifyReviewDoesNotExit(commentText){
     cy.get('.MuiStack-root').should('not.contain',commentText)
 
 }

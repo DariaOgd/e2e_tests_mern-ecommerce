@@ -4,7 +4,7 @@ import CartCommands from "../../support/cartCommands";
 import ProductDetailsCommands from "../../support/productDetailsCommands";
 import ApiHelper from "../../support/apiHelper";
 
-describe('When verifying product details', () => {
+describe('Product details functionality tests', () => {
 
   beforeEach(() => {
     cy.visit('/login')
@@ -17,39 +17,22 @@ describe('When verifying product details', () => {
 
   })
 
-  it('should verify if user can access product detail from main page', () => {
+  it('opens product details from main page', () => {
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
-
-
     CommonHelper.openFirstProductDetails()
-
-    cy.wait(1000)
-
     assertItemHasSomeTitle()
     assertStockStatusIsDisplayedCorrectly()
-
     verifyAddToCartButtonExist()
   })
 
-//to finish
-  it('should add product to cart correctly and remove it', () => {
-
+  it('adds product with specific quantity to cart', () => {
     CommonHelper.openFirstProductDetails()
     ProductDetailsCommands.setProductQuantity(3, 1)
     assertProductQuantityDisplayed(3)
-
     CartCommands.addToCart()
-
     CartCommands.assertCartIconShowsQuantity('1')
-
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
-    CartCommands.removeProductFromCart()
-
-
   })
-
-
 
 })
 

@@ -2,7 +2,7 @@ import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands"
 import CheckoutCommands from "../../support/checkoutCommands"
 import ApiHelper from "../../support/apiHelper"
-describe('When verifying checkout', () => {
+describe('Checkout flow tests', () => {
 
   beforeEach(() => {
     cy.visit('/login')
@@ -14,7 +14,6 @@ describe('When verifying checkout', () => {
   afterEach(() => {
   })
 
-  //dodac subtotal i sprawdzic przy checkoucie
   it('should complete checkout successfully with card payment', () => {
     CommonHelper.openFirstProductDetails()
     CartCommands.addToCart();
@@ -114,11 +113,9 @@ describe('When verifying checkout', () => {
     CheckoutCommands.placeOrder()
     submitOrderExpectingFailure()
 
-    //after
     CheckoutCommands.removeItemsFromCheckout()
   })
 
-  //wrong address and no adress
 
   it('form should validate if address is incorrect', () => {
     CommonHelper.openFirstProductDetails()

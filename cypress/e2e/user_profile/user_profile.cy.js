@@ -3,7 +3,7 @@ import CheckoutCommands from "../../support/checkoutCommands";
 import FormHelper from "../../support/formHelper"
 import ApiHelper from "../../support/apiHelper";
 import CartCommands from "../../support/cartCommands";
-describe('When verifying user profile functionality', () => {
+describe('User profile functionality tests', () => {
   beforeEach(() => {
     cy.visit('/login');
 
@@ -12,11 +12,11 @@ describe('When verifying user profile functionality', () => {
     cy.url().should('include', '/profile');
   });
 
-  it('should verify if user can access profile section from header', () => {
+  it('accesses profile section from header', () => {
     assertUserProfileContains({ name: 'Pael', email: 'Pawel@gmail.com' });
   });
 
-  it('should verify if user can add new profile data (address)', () => {
+  it('adds new address to profile', () => {
     CommonHelper.clickOnButton("Add")
 
     CheckoutCommands.fillAddressForm({
@@ -32,7 +32,7 @@ describe('When verifying user profile functionality', () => {
     FormHelper.clickFormButton("add");
   });
 
-  it('should verify address data is displayed correctly', () => {
+  it('displays address data correctly in profile', () => {
     assertAddressInForm({
       street: "Street 2",
       country: "Poland",
@@ -43,7 +43,7 @@ describe('When verifying user profile functionality', () => {
     });
   });
 
-  it('should display a newly added profile address in the checkout flow', () => {
+  it('displays newly added address in checkout flow', () => {
     cy.visit("/")
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
     CommonHelper.addProductToCartFromMainPage()
@@ -64,7 +64,7 @@ describe('When verifying user profile functionality', () => {
 
   })
 
-  it('should update the address data', () => {
+  it('updates address data', () => {
     cy.get('.MuiStack-root').contains('HOME').parent().parent().within(() => {
       FormHelper.clickFormButton("Edit");
     });
@@ -72,9 +72,9 @@ describe('When verifying user profile functionality', () => {
     FormHelper.updateFormFieldAndSubmit("Street", "Updated street");
   });
 
-  it('should delete the address successfully', () => {
+  it('deletes the address successfully', () => {
     FormHelper.deleteAddressByLabel("Home - test adress");
-    verifyAdressNotExistByLabel('Home - test adress')
+    verifyAddressNotExistByLabel('Home - test adress')
 
   });
 });
@@ -97,7 +97,7 @@ function assertAddressInForm(expectedValues) {
 
 
 
-function verifyAdressNotExistByLabel(label){
+function verifyAddressNotExistByLabel(label){
   cy.get('.MuiStack-root').should('not.contain.text', label);
 }
 

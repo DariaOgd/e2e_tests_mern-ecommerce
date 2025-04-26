@@ -2,7 +2,7 @@ import CommonHelper from "../../support/commonHelper";
 import CartCommands from "../../support/cartCommands";
 import ApiHelper from "../../support/apiHelper";
 
-describe('Given main page', () => {
+describe('Main page functionality tests', () => {
   before(() => {
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
 
@@ -14,7 +14,7 @@ describe('Given main page', () => {
   });
 
 
-  it('should sort elements from low to high', () => {
+  it('sorts products by price (low to high and high to low)', () => {
     const sort_options = ['low to high', 'high to low'];
     sort_options.forEach((option) => {
       sortProducts(option);
@@ -24,8 +24,8 @@ describe('Given main page', () => {
     });
   });
 
-  context('should check behavior of adding a product from main page to cart', () => {
-    it('should check if it is possible to add product to cart from main page', () => {
+  context('Adding products to cart from main page', () => {
+    it('adds products to cart successfully', () => {
       CommonHelper.operateOnProductByIndex(0, () => {
         CommonHelper.addProductToCartFromMainPage();
         CommonHelper.captureNameAndPrice('name1', 'price1');
@@ -43,7 +43,7 @@ describe('Given main page', () => {
       });
     });
 
-    it('should assert products were added correctly to cart', function () {
+    it('verifies products and subtotal in cart', function () {
       CartCommands.openCartFromHeader();
       CartCommands.assertProductNamesInCart([this.name1, this.name2]);
       CartCommands.assertProductPricesInCart([this.price1, this.price2]);
@@ -59,8 +59,8 @@ describe('Given main page', () => {
     });
   });
 
-  context('when veryfing left menu', () => {
-    it.only('should veryfy filtering on brands', () => {
+  context('Filtering products by brand', () => {
+    it('filters products by selected brand', () => {
       cy.wait(3000);
       selectBrandFilter('Puma');
       cy.get('.MuiGrid-container .MuiPaper-root').then($els => {

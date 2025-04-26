@@ -1,9 +1,9 @@
 import CommonHelper from "../../support/commonHelper"
-describe('Given register page', () => {
+describe('User registration functionality tests', () => {
     beforeEach(() => {
         cy.visit('/signup')
     })
-    it('should verify if user can create account with correct provided data', () => {
+    it('creates account with correct data', () => {
         let number = generateTwoDigitNumber()
         const userEmail = `user_name_${number}@gmail.com`
         const userName = `user_name_${number}`
@@ -12,7 +12,7 @@ describe('Given register page', () => {
         CommonHelper.verifyUserNameIsCorrectlyDisplayedInHeader(userName)
     })
 
-    it('should verify if user cant create an account if already has an account', () => {
+    it('prevents account creation with existing email', () => {
         let number = generateTwoDigitNumber()
         const userEmail = 'Pawel@gmail.com'
         const userName = `user_name_${number}`
@@ -20,7 +20,7 @@ describe('Given register page', () => {
         CommonHelper.Register(userName, userEmail, userPassword, true)
         verifyRegisterFormFieldsExist()
     })
-    it.only('should verify if user cant create an account if something is empty', () => {
+    it('prevents account creation with empty fields', () => {
         let number = generateTwoDigitNumber()
         const userEmail = 'Pawel@gmail.com'
         const userName = `user_name_${number}`
@@ -28,7 +28,7 @@ describe('Given register page', () => {
         CommonHelper.Register(userName, userEmail, userPassword, true)
     })
     
-    it('should verify that user cant create an account if it doesnt match password criteria', () => {
+    it('displays password criteria for weak password', () => {
         const info_text = 'at least 8 characters, must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, Can contain special characters'
         let number = generateTwoDigitNumber()
         const userEmail = `user_name_${number}@gmail.com`

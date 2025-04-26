@@ -2,7 +2,7 @@ import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands"
 import ApiHelper from "../../support/apiHelper"
 
-describe('When verifying cart', () => {
+describe('Cart functionality tests', () => {
   beforeEach(() => {
     cy.visit('/login')
 
@@ -13,10 +13,10 @@ describe('When verifying cart', () => {
     ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
   })
 
-  it('should add products to cart and persist cart after reload', function () {
+  it('adds products to cart and retains them after reload', function () {
     CommonHelper.operateOnProductByIndex(0, () => {
       CommonHelper.addProductToCartFromMainPage();
-      CommonHelper.captureNameAndPrice.call(this, 'name1', 'price1'); // 👈 bardzo ważne: przekazanie `this`
+      CommonHelper.captureNameAndPrice.call(this, 'name1', 'price1');
     });
   
     CommonHelper.operateOnProductByIndex(1, () => {
@@ -37,10 +37,6 @@ describe('When verifying cart', () => {
         
     }
     );
-
-
-  
-
   });
   
 })

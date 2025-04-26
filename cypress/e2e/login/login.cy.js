@@ -1,11 +1,11 @@
 import CommonHelper from "../../support/commonHelper"
-describe('Given login page', () => {
+describe('Login functionality tests', () => {
     let userEmail = Cypress.env("userEmail")
     let userPassword = Cypress.env("userPassword")
     beforeEach(() => {
         cy.visit('/login')
     })
-    it('should verify if user can log in', () => {
+    it('logs in successfully with valid credentials', () => {
         CommonHelper.LogIn(userEmail, userPassword)
         const user_name = 'Pael'
         CommonHelper.verifyToastModal('login successful')
@@ -13,45 +13,45 @@ describe('Given login page', () => {
 
     })
 
-    it('should logout user', () => {
+    it('logs out user successfully', () => {
         CommonHelper.LogIn(userEmail, userPassword)
         CommonHelper.Logout()
         ensureAuthInputsAreVisible()
 
     })
 
-    it.skip('should verify that user cant log in with wrong password', () => {
+    it.skip('blocks login attempt with wrong password', () => {
         CommonHelper.LogIn(userEmail, userPassword)
         CommonHelper.verifyToastModal('invalid credentials')
         ensureAuthInputsAreVisible()
 
     })
 
-    it('should verify that user cant log in with wrong email', () => {
+    it('blocks login attempt with wrong email', () => {
         CommonHelper.LogIn(userEmail, userPassword)
         CommonHelper.verifyToastModal('invalid credentials')
         ensureAuthInputsAreVisible()
 
     })
 
-    it('should verify that user admin user can log in', () => {
+    it('allows admin user to log in successfully', () => {
         CommonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"))
         CommonHelper.verifyToastModal('login successful')
         verifyAdminButtonInHeader()
     })
 
-    it('should keep user loggedf after page refresh', () => {
+    it('keeps user logged in after page refresh', () => {
         CommonHelper.LogIn(userEmail, userPassword)
         cy.reload()
-        verifyUserNameIsCorrectlyDisplayedInHeader('Pael')
+        verifyUserNameIsCorrectlyDisplayedInHeader('Pawel')
     })
 })
 
 
 function verifyUserNameIsCorrectlyDisplayedInHeader(userName) {
     cy.get('header').within(() => {
-        cy.get('a').should('contain', 'MERN SHOP'); // Ensures the store name exists
-        cy.get('.MuiStack-root').should('contain', `Hey👋, ${userName}`); // Checks if the username is displayed correctly
+        cy.get('a').should('contain', 'MERN SHOP');
+        cy.get('.MuiStack-root').should('contain', `Hey👋, ${userName}`);
     });
 }
 
@@ -61,8 +61,8 @@ function ensureAuthInputsAreVisible(){
 }
 function verifyAdminButtonInHeader(){
     cy.get('header').within(() => {
-        cy.get('a').should('contain', 'MERN SHOP'); // Ensures the store name exists
-        cy.get('.MuiStack-root').find('button').should('contain', 'Admin') // Checks if the username is displayed correctly
+        cy.get('a').should('contain', 'MERN SHOP'); 
+        cy.get('.MuiStack-root').find('button').should('contain', 'Admin') 
     });
 
 }

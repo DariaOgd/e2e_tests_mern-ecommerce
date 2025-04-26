@@ -5,17 +5,17 @@ describe('Admin Product Management Flow', () => {
   let updatedTitle;
   let randomNumber;
 
-  context("when veryfing admin", () => {
+  context("Admin panel operations", () => {
     beforeEach(() => {
       cy.visit('/login');
       commonHelper.LogIn(Cypress.env("adminEmail"), Cypress.env("adminPassword"));
     });
 
-    it('should verify if admin profile shows Admin label', () => {
+    it('displays Admin label in user profile', () => {
       AdminHelper.assertAdminLabelVisible();
     });
 
-    it('should allow admin to add a new product', () => {
+    it('adds new product successfully', () => {
       commonHelper.openProfileDropdownAndSelect('Add new Product');
       cy.wait(2000)
       cy.url().should('include', '/add-product');
@@ -43,26 +43,26 @@ describe('Admin Product Management Flow', () => {
       AdminHelper.assertProductVisibleInAdminDashboardList(newProduct.title);
     });
 
-    it('should update the title of the last added product', () => {
+    it('updates the last added product title', () => {
       updatedTitle = "Edited Product " + Math.floor(Math.random() * 100000);
       getLastProductCard().contains('Update').click();
       AdminHelper.updateProductTitleField(updatedTitle);
       AdminHelper.assertProductVisibleInAdminDashboardList(updatedTitle);
     });
 
-    it('should delete the last added product', () => {
+    it('deletes the last added product', () => {
       deleteLastProduct();
     });
 
   });
 
-  context('When veryfing end user', () => {
+  context('End user view after admin operations', () => {
     beforeEach(() => {
       cy.visit('/login');
       commonHelper.LogIn(Cypress.env("userEmail"), Cypress.env("userPassword"));
     });
 
-    it('user should not see admin deleted product', () => {
+    it('does not display deleted product', () => {
       const deletedTitle = `Example Product Title ${randomNumber}`;
       AdminHelper.verifyProductNotExist(deletedTitle)
     });
@@ -71,7 +71,7 @@ describe('Admin Product Management Flow', () => {
 
 describe('E2E flow: Admin adds product, user sees it', () => {
   let productTitle;
-  it('should let admin add a product and user see it on homepage', () => {
+  it('adds product as admin and verifies visibility as user', () => {
     const random = Math.floor(Math.random() * 100000);
     productTitle = `Test Product E2E ${random}`;
     const newProduct = {
@@ -132,8 +132,7 @@ function clickNextUntilDisabled() {
     .then($btn => {
       if (!$btn.is(':disabled')) {
         cy.wrap($btn).click();
-        cy.wait(500); // opcjonalnie, żeby dać czas na załadowanie nowej strony
-        clickNextUntilDisabled(); // wywołanie rekurencyjne
+        clickNextUntilDisabled();
       } else {
         cy.log('Pagination end reached.');
       }

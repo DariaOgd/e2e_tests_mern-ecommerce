@@ -2,7 +2,7 @@ import CommonHelper from "../../support/commonHelper"
 import CartCommands from "../../support/cartCommands";
 import ApiHelper from "../../support/apiHelper";
 import WishlistHelper from "../../support/wishlistHelper";
-describe('When veryfying user wishlist', () => {
+describe('User wishlist functionality tests', () => {
     beforeEach(() => {
   
       cy.visit('/login')
@@ -15,8 +15,7 @@ describe('When veryfying user wishlist', () => {
     
       })
 
-      let headerText; 
-      it('Should add product to wishlist from product detail page', () => {
+      it('adds product to wishlist from product detail page', () => {
         ApiHelper.deleteAllItemsFromCart(Cypress.env("user_ID"))
 
         CommonHelper.openFirstProductDetails();
@@ -27,8 +26,8 @@ describe('When veryfying user wishlist', () => {
         });
       })
 
-      it('should add a note to a product in a wishlist', () => {
-        const note = "Notatka"
+      it('adds a note to a product in wishlist', () => {
+        const note = "Note"
         CommonHelper.openFirstProductDetails();
         WishlistHelper.addToWishlist()
         WishlistHelper.openWishlist();
@@ -37,7 +36,7 @@ describe('When veryfying user wishlist', () => {
         WishlistHelper.removeProductFromWishlistByIndex(0)
       })
 
-      it('should add product from wishlist to cart', () => {
+      it('moves product from wishlist to cart', () => {
         CommonHelper.openFirstProductDetails();
         WishlistHelper.addToWishlist()
         WishlistHelper.openWishlist();
