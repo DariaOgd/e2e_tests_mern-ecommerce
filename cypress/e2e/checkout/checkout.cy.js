@@ -3,7 +3,6 @@ import CartCommands from "../../support/cartCommands"
 import CheckoutCommands from "../../support/checkoutCommands"
 import ApiHelper from "../../support/apiHelper"
 describe('When verifying checkout', () => {
-  let orderId, total, productName
 
   beforeEach(() => {
     cy.visit('/login')
@@ -19,10 +18,8 @@ describe('When verifying checkout', () => {
   it('should complete checkout successfully with card payment', () => {
     CommonHelper.openFirstProductDetails()
     CartCommands.addToCart();
-    cy.wait(1000);
     CartCommands.openCartFromHeader();
     CheckoutCommands.navigateToCheckout();
-    cy.wait(2000);
   
     CheckoutCommands.fillAddressForm({
       type: "Home",
@@ -100,10 +97,8 @@ describe('When verifying checkout', () => {
   it('should not allow checkout if no payment method is selected', () => {
     CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
 
     CheckoutCommands.fillAddressForm({
       type: "Home",
@@ -128,10 +123,8 @@ describe('When verifying checkout', () => {
   it('form should validate if address is incorrect', () => {
     CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
     cy.get(".MuiStack-root").contains("Reset").click()
     CheckoutCommands.fillAddressForm({
       type: "1",
@@ -153,10 +146,8 @@ describe('When verifying checkout', () => {
   it('form should validate if address is empty', () => {
     CommonHelper.openFirstProductDetails()
     CartCommands.addToCart()
-    cy.wait(1000)
     CartCommands.openCartFromHeader()
     CheckoutCommands.navigateToCheckout()
-    cy.wait(2000)
     resetAdress()
     clickOnAddAdress()
 

@@ -17,6 +17,7 @@ describe('Admin Product Management Flow', () => {
 
     it('should allow admin to add a new product', () => {
       commonHelper.openProfileDropdownAndSelect('Add new Product');
+      cy.wait(2000)
       cy.url().should('include', '/add-product');
 
       randomNumber = Math.floor(Math.random() * 100000);
@@ -37,8 +38,7 @@ describe('Admin Product Management Flow', () => {
         brand: 'Asics',
         category: 'Socks'
       };
-
-      Cypress.env('productTitle', newProduct.title);
+      AdminHelper.fillProductFormFields(newProduct)
       AdminHelper.clickFormButton('Add Product');
       AdminHelper.assertProductVisibleInAdminDashboardList(newProduct.title);
     });

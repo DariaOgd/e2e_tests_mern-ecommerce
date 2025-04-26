@@ -1,2 +1,5 @@
 node_modules/
-.env
+*.env
+
+cypress/screenshots/
+cypress/reports/
